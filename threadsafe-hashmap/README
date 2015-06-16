@@ -1,0 +1,15 @@
+Implementation of a hashmap with mutex on each bucket.
+Probably, the better solution would be to have fixed amount of segments each protected by mutex (as it is in Java's implementation)
+For resizing also there is one mutex.
+Also was not sure if I'm allowed to use c++14 features, but read/write mutexes would've been very usefull here.
+Could not use any standard containers, which also would've make the code cleaner.
+
+
+
+BUILD:
+To build the project run commands:
+1.   cmake .
+2.   make
+
+RUN:
+Call ./hashmap with no arguments to run unit tests.
