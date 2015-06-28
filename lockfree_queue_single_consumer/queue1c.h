@@ -75,6 +75,7 @@ public:
             if (++m_writers <= 0)
             {
                 std::this_thread::yield();
+                // TO DO: can add CAS decreasing here. 
                 continue;
             }
 
@@ -82,7 +83,7 @@ public:
             new_tail_ind = tail_ind + 1;
             size = m_size;
 
-            if (m_head <= tail_ind - size)  // Need to do resize.
+            if (m_head <= tail_ind - size)  // Need to do resize. TO DO: can check for m_tail_end overflow. 
             {
                 //assert(m_head >= tail_ind - size);
                 bool resize_by_another_thread = m_resizing.test_and_set();
@@ -132,6 +133,11 @@ public:
     // Must be called from one thread.
     void get_all( std::vector<T>& out )
     {
+        while (++m_writers <= 0)
+            {
+                std::this_thread::yield();
+            }
+
         const size_t tail_start = m_tail_start;
         const size_t head = m_head;
         const size_t distance = tail_start - head;
@@ -146,6 +152,7 @@ public:
 
             m_head = tail_start;
         }
+         --m_writers;
     }
 
 private:
