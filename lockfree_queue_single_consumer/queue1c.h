@@ -124,6 +124,7 @@ public:
                 &m_tail_start,
                 &tail_ind,
                 new_tail_ind));
+        --m_writers;
     };
 
 
